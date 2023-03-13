@@ -1,0 +1,62 @@
+      "description": "Credits used per system user on a monthly basis",
+      "columns": {
+        "user_name": {
+          "name": "user_name",
+          "description": "The Snowflake user who issued the query",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        },
+        "team_name": {
+          "name": "team_name",
+          "description": "Team (based on Snowflake role assignment)",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        },
+        "month": {
+          "name": "month",
+          "description": "Month in which the consumption took place",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        },
+        "credits_used_per_system_user": {
+          "name": "credits_used_per_system_user",
+          "description": "Total credits used per system user",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        },
+        "ranking_system_user_monthly": {
+          "name": "ranking_system_user_monthly",
+          "description": "Monthly system user ranking based on credit consumption",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        },
+        "ranking_user_team": {
+          "name": "ranking_user_team",
+          "description": "Monthly system user ranking per team based on credit consumption",
+          "meta": {},
+          "data_type": null,
+          "quote": null,
+          "tags": []
+        }
+      },
+      "meta": {
+        "owner": "ALEJANDRO.IVANEZ@PERSGROEP.NET"
+      },
+      "docs": {
+        "show": true,
+        "node_color": null
+      },
+      "patch_path": "project_platform_dbs://models/reporting/_reporting__models.yml",
+      "build_path": null,
+      "deferred": false,
+
