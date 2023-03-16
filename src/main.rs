@@ -3,6 +3,17 @@ use std::fmt::Display;
 use std::collections::{HashMap,HashSet};
 use std::fs::{read_to_string};
 use serde::{Deserialize, Serialize};
+use clap::{Parser,ValueEnum};
+
+#[derive(Parser)]
+#[structopt(name="evaldbt", about="A super fast dbt project evaluator")]
+struct Args {
+    #[arg(short, long)]
+    path: String,
+
+    #[arg(short, long, value_enum, ignore_case = true)]
+    rules: Option<Vec<NodeTest>>
+}
 
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -62,6 +73,7 @@ impl Manifest {
     }
 }
 
+#[derive(ValueEnum, Clone)]
 pub enum NodeTest {
     DirectJoinSource,
     MartsOrIntermediateOnSource,
@@ -223,24 +235,34 @@ mod tests {
 }
 
 fn main() {
-    let manifest = read_to_string("./manifest.json").unwrap();
+    let args: Args = Args::parse();
+
+    let manifest = read_to_string(args.path).unwrap();
     let manifest: Manifest = Manifest::from_str(&manifest);
 
-    let context = ValidationContext {
-        node_tests:  vec![NodeTest::DirectJoinSource,
-        NodeTest::HardCodedReferences,
-        NodeTest::MartsOrIntermediateOnSource,
-        NodeTest::ModelFanOut,
-        NodeTest::SourceFanOut,
-        NodeTest::MultipleSourcesJoined,
-        NodeTest::NoParents,
-        NodeTest::StagingOnStaging,
-        NodeTest::StagingOnDownstream,
-        NodeTest::UnusedSources
-        ]
-    };
+    match args.rules {
+        Some(rules) => {
+            let context = ValidationContext { node_tests: rules };
+            let report = context.check(&manifest);
+            println!("{:?}", report);
+        }
+        None => {
+            let context = ValidationContext {
+                node_tests:  vec![NodeTest::DirectJoinSource,
+                    NodeTest::HardCodedReferences,
+                    NodeTest::MartsOrIntermediateOnSource,
+                    NodeTest::ModelFanOut,
+                    NodeTest::SourceFanOut,
+                    NodeTest::MultipleSourcesJoined,
+                    NodeTest::NoParents,
+                    NodeTest::StagingOnStaging,
+                    NodeTest::StagingOnDownstream,
+                    NodeTest::UnusedSources
+                ]
+            };
 
-    let report = context.check(&manifest);
-
-    println!("{:?}", report);
+            let report = context.check(&manifest);
+            println!("{:?}", report);
+        }
+    }
 }
